@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>击鼓传花</title>
+</head>
+<body>
+
+</body>
+</html>
+<script>
+	function passGame (nameList, num) {
+		// 1.创建一个队列结构
+
+		let queue = new Queue()
+
+		// 2.将所有人依次加入到队列中
+		for (let i = 0; i < nameList.length; i++) {
+			queue.enqueue(nameList[i])
+		}
+
+		// 3.开始数数
+		while(queue.size() > 1) {
+			// 不是 num 的时候，重新加入到队列的末尾，是 num 这个数字的时候，将其从队列中删除
+			for (let i = 0; i < num - 1; i++) {
+				// 3.1 num 数字之前的人重新放到队列末尾
+				queue.enqueue(queue.dequeue())
+			}
+			// 3.2 num 对应的人，直接从队列中删除
+			// num 对应这个人，直接从队列中删除
+			// 由于队列没有像数组一样的下标值不能直接取到某一元素，
+			// 所以采用，把 num 前面的 num - 1 个元素先删除后添加到队列末尾，
+			// 这样第 num 个元素就排到了队列的最前面，可以直接使用 dequeue 方法进行删除
+			queue.dequeue()
+		}
+
+		// 4.获取剩下的人
+		let endName = queue.front()
+		console.log('最后剩下的人', endName)
+		return nameList.indexOf(endName)
+
+	}
+
+	console.log(passGame (['lili', 'lucy', 'tom', 'lilei', 'why'], 3), '最后的下标值')
+</script>
