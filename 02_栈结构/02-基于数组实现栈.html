@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>基于数组实现栈结构</title>
+</head>
+<body>
+
+</body>
+</html>
+<script>
+	// 基于数组实现栈结构
+	class Stack {
+		constructor() {
+			this.items = []
+		}
+		// 1、将元素压入栈
+		push(element) {
+			this.items.push(element)
+		}
+		// 2、从栈中取元素
+		pop(){
+			return this.items.pop() // 弹出最后一个元素
+		}
+	  // 3、查看下栈顶元素
+		peek() {
+			return this.items[this.items.length - 1]
+		}
+		// 4、判断栈是否为空
+		isEmpty() {
+			return this.items.length === 0
+		}
+		// 5、获取栈中元素的个数
+		size() {
+			return this.items.length
+		}
+		// 6、toString 方法
+		toString() {
+			let resultString = ''
+			for (let i = 0; i < this.items.length; i++) {
+				resultString += this.items[i] + ' '
+			}
+			return resultString
+		}
+	}
+</script>
+<script>
+	// 基于数组实现栈结构
+	function Stack() {
+		// 栈中的属性
+		this.items = []
+		// 栈的相关操作
+		// 1、将元素压入栈
+		Stack.prototype.push = function (element) {
+			this.items.push(element)
+		}
+		// 2、从栈中取出元素
+		Stack.prototype.pop = function () {
+			return this.items.pop() // 弹出最后一个元素
+		}
+		// 3、查看一下栈顶元素
+		Stack.prototype.peek = function () {
+			return this.items[this.items.length - 1]
+		}
+		// 4、判断栈是否为空
+		Stack.prototype.isEmpty = function () {
+			return this.items.length === 0
+		}
+		// 5、获取栈中元素的个数
+		Stack.prototype.size = function () {
+			return this.items.length
+		}
+		// 6、toString 方法
+		Stack.prototype.toString = function () {
+			let resultString = ''
+			for (let i = 0; i < this.items.length; i++) {
+				resultString += this.items[i] + ' '
+			}
+			return resultString
+		}
+	}
+	// 栈的使用
+	let s = new Stack()
+	s.push(1)
+	s.push(2)
+	s.push(100)
+	s.push(89)
+	console.log(s, 's')
+	// s.pop()
+	console.log(s.peek())
+	console.log(s.isEmpty())
+	console.log(s.size())
+</script>

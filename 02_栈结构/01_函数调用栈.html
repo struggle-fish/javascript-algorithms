@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>函数调用栈</title>
+</head>
+<body>
+
+</body>
+</html>
+<script>
+
+	A()
+	function A() {
+		console.log('函数-A')
+		debugger
+		B()
+	}
+	function B(){
+		console.log('函数-B')
+		C()
+	}
+	function C(){
+		console.log('函数-C')
+		D()
+	}
+	function D(){
+		console.log('函数-D')
+	}
+</script>
