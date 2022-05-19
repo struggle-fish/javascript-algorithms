@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>基于数组优先级队列</title>
+</head>
+<body>
+
+</body>
+</html>
+<script>
+	class QueueElement {
+		constructor(element, priority) {
+			this.element = element
+			this.priority = priority
+		}
+	}
+
+	class PriorityQueue {
+		constructor() {
+			this.items = []
+		}
+		// 1.插入数据
+		enqueue(element, priority) {
+			// 1.1创建 QueueElement
+			const queueElement = new QueueElement(element, priority)
+			// 1.2判断队列是否为空
+			if (this.isEmpty()) {
+				this.items.push(queueElement)
+			} else {
+				let added = false
+				// array.splice(starti, n, 值1, 值2)
+				// starti 指的是从哪个位置开始(不包含starti)
+				// n 为 0 删除 0个 即插入数据
+				// n 不为 0 表示修改或者替换数据
+				for (let i = 0; i < this.items.length; i++) {
+					// 比较优先级，值越小，优先级越大
+					if (queueElement.priority < this.items[i].priority) {
+						this.items.splice(i, 0, queueElement)
+						added = true
+						break
+					}
+				}
+
+				// 比较完所有数据，发现没有一个比我优先级高
+				if (!added) {
+					this.items.push(queueElement)
+				}
+			}
+		}
+		// 2.从队列中删除前端的元素
+		dequeue() {
+			return this.items.shift() // 删除第一个元素
+		}
+		// 3.查看队列前端的元素
+		front() {
+			return this.items[0]
+		}
+		// 4.查看队列是否为空
+		isEmpty () {
+			return this.items.length === 0
+		}
+		// 5.查看队列中元素的个数
+		size() {
+			return this.items.length
+		}
+		// 6.toString 方法
+		toString() {
+			let resultString = ''
+			for (let i = 0; i < this.items.length; i++) {
+				resultString += this.items[i] + ''
+			}
+			return resultString
+		}
+	}
+</script>
+<script>
+	// 优先级队列
+	function PriorityQueue() {
+
+		// 创建一个内部类
+		// 保存当前数据以及对应优先级
+		function QueueElement(element, priority) {
+			this.element = element
+			this.priority = priority
+		}
+
+		this.items = []
+
+		// 1.插入数据
+		PriorityQueue.prototype.enqueue = function (element, priority) {
+			// 1.1创建 QueueElement
+			let queueElement = new QueueElement(element, priority)
+
+			// 1.2判断队列是否为空
+			if(this.items.length === 0) {
+				this.items.push(queueElement)
+			} else {
+				let added = false
+				for (let i = 0; i < this.items.length; i++) {
+					if (queueElement.priority < this.items[i]priority) {
+						// array.splice(starti, n, 值1, 值2)
+						// starti 指的是从哪个位置开始(不包含starti)
+						// n 为 0 删除 0个 即插入数据
+						// n 不为 0 表示修改或者替换数据
+						this.items.splice(i, 0, queueElement)
+						added = true // 标识是否已经放到队列中，如果放到队列中，后面的数据就可以不用比较了
+						break
+					}
+				}
+
+				// 比较完所有数据，发现没有一个比我优先级高
+				if (!added) {
+					this.items.push(queueElement)
+				}
+
+			}
+
+		}
+
+		// 2.从队列中删除前端的元素
+		PriorityQueue.prototype.dequeue = function () {
+			return this.items.shift() // 删除第一个元素
+		}
+		// 3.查看队列前端的元素
+		PriorityQueue.prototype.front = function () {
+			return this.items[0]
+		}
+		// 4.查看队列是否为空
+		PriorityQueue.prototype.isEmpty = function () {
+			return this.items.length === 0
+		}
+		// 5.查看队列中元素的个数
+		PriorityQueue.prototype.size = function () {
+			return this.items.length
+		}
+		// 6.toString 方法
+		PriorityQueue.prototype.toString = function () {
+			let resultString = ''
+			for (let i = 0; i < this.items.length; i++) {
+				resultString += this.items[i] + ''
+			}
+			return resultString
+		}
+
+	}
+
+
+	let pq = new PriorityQueue()
+	pq.enqueue('A', 1)
+	pq.enqueue('D', 12)
+	pq.enqueue('D2', 132)
+	pq.enqueue('D3', 9)
+	console.log(pq, 'pq000')
+</script>
