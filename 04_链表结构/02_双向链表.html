@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>双向链表</title>
+</head>
+<body>
+
+</body>
+</html>
+<script>
+
+class DoublyLinkedList {
+	head = null
+	tail = null
+	length = 0
+	// 生成节点
+	Node = class {
+		constructor(data) {
+			this.data = data
+			this.prev = null
+			this.next = null
+		}
+	}
+
+
+	// 1.append 方法
+	append(data) {
+		// 1-1.根据data创建节点
+		let newNode = new this.Node(data)
+
+		// 1-2.判断是否添加的是第一个节点
+		if (this.length === 0) {
+			this.head = newNode
+			this.tail = newNode
+		} else {
+			// 注意！！不用通过循环找到最后一个节点，和单向链表不同之处
+
+			newNode.prev = this.tail
+			this.tail.next = newNode
+			this.tail = newNode
+		}
+		// 1-3.length + 1
+		this.length += 1
+	}
+
+	// 2.
+	toString () {
+		return this.forwardString()
+	}
+
+	// 3.forwardString   链表数据从前往后以字符串形式返回
+	forwardString () {
+		// 3-1.定义变量
+		let current = this.head
+		let resultString = ''
+		// 3-2.依次向后遍历，获取每个节点
+		while (current) {
+			resultString += current.data + ' '
+			current = current.next
+		}
+		return resultString
+	}
+
+	// 4.backwardString 链表数据从后往前以字符串形式返回
+	// 由后向前遍历
+	backwardString () {
+		// 4-1.定义变量
+		let current = this.tail
+		let resultString = ''
+
+		// 4-2.依次向前遍历，获取每个节点
+		while (current) {
+			resultString += current.data + ' '
+			current = current.prev
+		}
+		return resultString
+	}
+
+	// 5.insert 方法
+	insert(position, data) {
+		// 5-1.越界判断
+		if (position < 0 || position > this.length) {
+			return false
+		}
+		// 5-2.根据data创建新的节点
+		let newNode = new this.Node(data)
+		// 5-3.判断原来的列表是否为空
+		if (this.length === 0) {
+			// 5-3-1 第一种情况 链表为空
+			this.head = newNode
+			this.tail = newNode
+		} else {
+			// 5-3-2 第二种情况 判断 position 是否为 0
+			if (position == 0) {
+				// 原来的第一个节点的 prev = newNode
+				// newNode.next = 原来的第一个节点
+				this.head.prev = newNode
+				newNode.next = this.head
+				this.head = newNode
+			} else if (position == this.length) {
+				// 5-3-3 最后一个节点 和append 实现一样
+				// newNode.prev  = 原来的最后一个节点
+				newNode.prev = this.tail
+				this.tail.next = newNode
+				// 改变最后一个指针
+				this.tail = newNode
+			} else {
+				// 5-3-4 其他情况
+				let current = this.head
+				let index = 0
+				while (index++ < position) {
+					current = current.next
+				}
+				// 修改指针
+				newNode.next = current
+				newNode.prev = current.prev
+				current.prev.next = newNode
+				// 注意此处，最后修改
+				current.prev = newNode
+			}
+		}
+		// length + 1
+		this.length += 1
+		return true
+	}
+
+	// 6.get 方法
+	get(position) {
+		// 6-1.越界判断
+		if (position < 0 || position >= this.length) {
+			return null
+		}
+		// TODO:
+		// this.length / 2 > position 从头向后遍历
+		// this.length / 2 < position 从后向前遍历
+		// 6-2.获取元素
+		let current = this.head
+		let index = 0
+		while (index++ < position) {
+			current = current.next
+		}
+		return current.data
+	}
+
+	// 7.indexOf 方法
+	indexOf(data) {
+		// 7-1.定义变量
+		let current = this.head
+		let index = 0
+
+		// 7-2.查找和data相同的节点
+		while (current) {
+			if (current.data === data) {
+				return index
+			}
+			current = current.next
+			index += 1
+		}
+		return -1
+	}
+
+	// 8.update 方法
+	update(position, newData) {
+		// 8-1.越界判断
+		if (position < 0 || position >= this.length) {
+			return false
+		}
+
+		// 8-2.寻找正确的节点
+
+		let current = this.head
+		let index = 0
+
+		while (index++ < position) {
+			current = current.next
+		}
+
+		// 8-3.修改找到的节点
+		current.data = newData
+
+		return true
+	}
+
+	// 9.removeAt 方法
+	removeAt(position) {
+		// 9-1.边界判断
+		if (position < 0 || position >= this.length) {
+			return null
+		}
+
+
+		let current = this.head
+
+		// 9-2.判断情况
+		if (this.length === 1) {
+			// 9-2.1.是否只有一个节点
+			this.head = null
+			this.tail = null
+		} else {
+			// 9-2.2.删除第一个节点
+			if (position == 0) {
+				// 虽然被删除的节点有指向别人，但是没有任何引用指向被删除的节点，被删除的节点会被回收
+				this.head.next.prev = null
+				this.head = this.head.next
+			} else if (position == this.length - 1) {
+				// 先拿到最后一个节点的前一个节点，修改其next 指向 null
+				// 修改 tail的指向
+				current = this.tail // 用于返回删除的数据
+				this.tail.prev.next = null
+				this.tail = this.tail.prev
+			} else {
+				let index = 0
+				while (index++ < position) {
+					current = current.next
+				}
+				current.prev.next = current.next
+				current.next.prev = current.prev
+			}
+		}
+
+
+		// 9-3.length - 1
+		this.length -= 1
+		return current.data
+	}
+
+	// 10.remove 方法
+	remove(data) {
+		// 10-1.根据data获取下标值
+		let index = this.indexOf(data)
+		// 10-2.根据index删除对应位置的节点
+		return this.removeAt(index)
+	}
+
+	// 11.isEmpty 方法
+	isEmpty() {
+		return this.length === 0
+	}
+
+	// 12.size 方法
+	size() {
+		return this.length
+	}
+
+	// 13.getHead 方法
+	getHead() {
+		return this.head.data
+	}
+
+	// 14.getTail 方法
+	getTail() {
+		return this.tail.data
+	}
+
+
+
+}
+
+let list = new DoublyLinkedList()
+list.append('a')
+list.append('b')
+list.append('c')
+console.log(list, '测试append')
+console.log(list.insert(0, '99'), list, '测试insert-position=0')
+console.log(list.insert(4, '88'), list, '测试insert-position=length')
+console.log(list.insert(1, 'tt'), list, '测试insert-position=1')
+console.log(list.get(0), '测试get')
+console.log(list.indexOf('99'), '测试indexOf')
+console.log(list.update(0, '77'), list, '测试update')
+console.log(list.removeAt(0), list, 'removeAt-删除第一个')
+console.log(list.removeAt(list.length - 1), list, 'removeAt-删除最后个')
+console.log(list.forwardString(), '测试forwardString')
+console.log(list.backwardString(), '测试backwardString')
+console.log(list.removeAt(2), list, 'removeAt-删除某个节点')
+
+
+
+let list2 = new DoublyLinkedList()
+list2.append('aa')
+console.log(list2.removeAt(1), list2, 'removeAt-length=1')
+
+
+</script>
