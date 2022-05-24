@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>集合</title>
+</head>
+<body>
+
+</body>
+</html>
+<script>
+	class Set {
+		constructor() {
+			this.items = {}
+		}
+
+		// 1.add 方法
+		add (value) {
+			// 判断当前集合是否已经包含元素
+			if (this.has(value)) {
+				return false
+			}
+			// 将元素添加到集合中
+			this.items[value] = value
+
+			return true
+		}
+
+		// 2.has 方法
+		has (value) {
+			return this.items.hasOwnProperty(value)
+		}
+
+		// 3.remove 方法
+		remove (value) {
+			// 3-1.判断是否包含元素
+			if (!this.has(value)) {
+				return false
+			}
+
+			// 3-2.删除元素
+			delete this.items[value]
+			return true
+		}
+		// 4.clear 方法
+		clear () {
+			this.items = {}
+		}
+		// 5.size 方法
+		size () {
+			return Object.keys(this.items).length
+		}
+		// 6.values 方法
+		values () {
+			return Object.keys(this.items)
+		}
+		// 7.union 并集
+		union(otherSet) {
+			// 集合A： this
+			// 集合B： otherSet
+			// 7-1.创建新的集合
+			let unionSet = new Set()
+
+			// 7-2.将A集合中所有的元素添加到新集合中
+			let values = this.values()
+			for (let i = 0; i < values.length; i++) {
+				unionSet.add(values[i])
+			}
+
+			// 7-3.取出B集合的元素，判断是否需要添加到新集合
+			values = otherSet.values()
+			for (let i = 0; i < values.length; i++) {
+				unionSet.add(values[i])
+			}
+
+			return unionSet
+		}
+
+		// 8.交集
+		intersection(otherSet) {
+			// 集合A： this
+			// 集合B： otherSet
+			// 8-1.创建一个新的集合
+			let intersectionSet = new Set()
+
+			// 8-2.从A中取出元素，判断是否同时存在集合B中, 存在，就放到新集合中
+			let values = this.values()
+
+			for (let i = 0; i < values.length; i++) {
+				let item = values[i]
+				if (otherSet.has(item)) {
+					intersectionSet.add(item)
+				}
+			}
+
+			return intersectionSet
+		}
+
+		// 9.差集
+		difference(otherSet) {
+			// 9-1.创建新的集合
+			let differenceSet = new Set()
+
+			// 9-2.取出A集合中的元素，判断是否同时存在于B中，不存在B中的放到新集合里
+			let values = this.values()
+			for (let i = 0; i < values.length; i++) {
+				let item = values[i]
+				if (!otherSet.has(item)) {
+					differenceSet.add(item)
+				}
+			}
+			return differenceSet
+		}
+
+		// 10.子集
+		subset(otherSet) {
+			// 10-1.遍历A中所有的元素，如果发现集合A中有一个元素在集合B中不存在，就返回false
+			// 如果遍历完了A，依然没有返回false 返回 true
+
+			let values = this.values()
+			for (let i = 0; i < values.length; i++) {
+				let item = values[i]
+				if (!otherSet.has(item)) {
+					return false
+				}
+			}
+
+			return true
+		}
+
+
+	}
+</script>
