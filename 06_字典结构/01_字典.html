@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>字典</title>
+</head>
+<body>
+
+</body>
+</html>
+<script>
+class Map {
+	constructor() {
+		this.items = {}
+	}
+	// 1.set 方法
+	set (key, value) {
+		this.items[key] = value
+	}
+	// 2.remove 方法
+	remove(key) {
+		// 如果集合不存在该 key，返回 false
+		if (!this.has(key)) {
+			return false
+		}
+		delete this.items[key]
+		return true
+	}
+	// 3.has 方法
+	has (key) {
+		return this.items.hasOwnProperty(key)
+	}
+	// 4.get 方法
+	get (key) {
+		return this.has(key) ? this.items[key] : undefined
+	}
+	// 5.clear 方法
+	clear() {
+		this.items = {}
+	}
+	// 6.size 方法
+	size() {
+		return this.keys().length
+	}
+	// 7.keys 方法
+	keys() {
+		return Object.keys(this.items)
+	}
+	// 8.values 方法
+	values() {
+		return Object.values(this.items)
+	}
+}
+</script>
