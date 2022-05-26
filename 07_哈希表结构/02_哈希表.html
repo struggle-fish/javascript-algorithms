@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>哈希表</title>
+</head>
+<body>
+
+</body>
+</html>
+<script>
+	class HashTable {
+		constructor() {
+			// 哈希表存储数据的变量
+			this.storage = []
+			// 当前存放的元素个数
+			this.count = 0
+			// 用于标记数组中一共可以存放多少个元素
+			this.limit = 7
+		}
+		// 1.哈希函数
+		hashFn(str, size = 7) {
+			// 一个质数
+			const PRIME = 31;
+			// 1-1.定义hasCode变量
+			let hashCode = 0
+			// 1-2.霍纳算法计算 hashCode 的值
+			for (let i = 0; i < str.length; i++) {
+				hashCode = PRIME * hashCode + str.charCodeAt(i)
+			}
+			// 1-3.取余操作
+			let index = hashCode % size
+			return index
+		}
+		// 2.put(key, value) 插入或修改操作
+		put (key, value) {
+			// 2-1.根据key获取对应的index
+			const index = this.hashFn(key, this.limit)
+
+			// 2-2.根据index获取bucket
+			let bucket = this.storage[index]
+
+			// 2-3.判断该 bucket 是否为空
+			if (bucket == null) {
+				bucket = []
+				this.storage[index] = bucket
+			}
+
+			// 2-4.判断是否是修改数据, 哈希表里有值就表示修改
+			// 值已经存在了，表示需要修改，重新赋值
+			for (let i = 0; i < bucket.length; i++) {
+				let tuple = bucket[i]
+				if (tuple[0] === key) {
+					tuple[1] = value
+					return
+				}
+			}
+
+			// 2-5.添加数据
+			bucket.push([key, value])
+			this.count += 1
+
+			// 2-6.判断是否需要扩容
+			if (this.count > this.limit * 0.75) {
+				let newSize = this.limit * 2
+				let newPrime = this.getPrime(newSize)
+				this.resize(newPrime)
+			}
+		}
+	  // 3.get(key) 获取哈希表中特定位置的元素
+		get(key) {
+			// 3-1.根据key获取对应的index
+			let index = this.hashFn(key, this.limit)
+
+			// 3-2.根据index获取对应的bucket
+			let bucket = this.storage[index]
+
+			// 3-3.判断bucket是否为空
+			if (bucket === null) {
+				return null
+			}
+
+			// 3-4.有bucket,进行线性查找
+			for (let i = 0; i < bucket.length; i++) {
+				let tuple = bucket[i]
+				if (tuple[0] === key) {
+					return tuple[1]
+				}
+			}
+
+			// 3-5.依然没有找到数据
+			return null
+		}
+	  // 4.remove(key) 删除哈希表中特定位置的元素
+		remove (key) {
+			// 4-1.根据key获取对应的index
+			let index = this.hashFn(key, this.limit)
+
+			// 4-2.根据index 获取对应的bucket
+			let bucket = this.storage[index]
+
+			// 4-3.判断bucket是否为null
+			if (bucket === null) {
+				return null
+			}
+
+			// 4-4.有bucket 线性查找，并且删除
+			for (let i = 0; i < bucket.length; i++) {
+				let tuple = bucket[i]
+				if (tuple[0] === key) {
+					bucket.splice(i, 1)
+					this.count--
+					return tuple[1]
+
+					// 缩小容量
+					// 根据装填因子的大小，判断是否要进行哈希表压缩
+					if (this.limit > 7 && this.count < this.limit * 0.25) {
+						let newSize = Math.floor(this.limit / 2)
+						let newPrime = this.getPrime(newSize)
+						this.resize(newPrime)
+					}
+				}
+			}
+
+			// 4-5.依然没有找到
+			return null
+		}
+		// 5.isEmpty() 如果哈希表中不包含任何元素，返回 trun，如果哈希表长度大于 0 则返回 false
+		isEmpty () {
+			return this.count === 0
+		}
+		// 6.size() 返回哈希表包含的元素个数
+		size () {
+			return this.count
+		}
+	  // 7.resize(newLimit) 对哈希表进行扩容操作
+		resize (newLimit) {
+			// 7-1.保存旧数组内容
+			let oldStorage = this.storage
+
+		// 7-2.重置所有的属性
+			this.storage = []
+			this.count = 0
+			this.limit = newLimit
+
+			// 7-3.遍历 oldStorage 中所有的 bucket
+			for (let i = 0; i < oldStorage.length; i++) {
+				// 7-3.1取出对应的 bucket
+				let bucket = oldStorage[i]
+
+				// 7-3.2判断bucket是否为null
+				if (bucket === null) {
+					continue;
+				}
+
+				// 7-3.3bucket 中所有的数据，那么取出数据，重新插入
+				for (let j = 0; j < bucket.length; j++) {
+					let tuple = bucket[j]
+					this.put(tuple[0], tuple[1])
+				}
+
+			}
+		}
+	  // 8.isPrime(num) 判断某个数字是否是质数
+		isPrime (num) {
+			if (num <= 1) {
+				return false
+			}
+			// 8-1.获取 num 的平方根
+			let temp = parseInt(Math.sqrt(num))
+
+			// 8-2.循环判断 , 不需要到 num -1 ，只需要遍历到sqrt(n)即可
+			for (let i = 2; i <= temp; i++) {
+				if (num % i === 0) {
+					return false
+				}
+			}
+			return true
+		}
+	  // 9.getPrime(num) 获取一个质数
+		getPrime (num) {
+			// 14 -> 17
+			while (!this.isPrime(num)) {
+				num++
+			}
+
+			return num
+		}
+
+	}
+
+	let ht = new HashTable()
+	ht.put('abc', '111')
+	ht.put('bc', '222')
+	ht.put('bb', '333')
+	ht.put('cc', '444')
+	ht.put('tt', '555')
+	ht.put('tyu', '666')
+	ht.put('opq', '777')
+	ht.put('ggg', '888')
+	ht.put('tyu', '999')
+	ht.put('iop', '000')
+	console.log(ht, '测试put方法')
+	console.log(ht.get('iop'))
+	// console.log(ht.remove('abc'), ht, '测试remove')
+</script>

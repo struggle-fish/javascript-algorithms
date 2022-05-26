@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>哈希函数</title>
+</head>
+<body>
+
+</body>
+</html>
+<script>
+	// 哈希函数
+	// 1.将字符串转成比较大的数字hashCode
+	// 2.将大的数字hashCode压缩到数组范围之内
+	function hashFunc (str, size = 7) {
+		// 一个质数
+		const PRIME = 31;
+		// 1.定义hasCode变量
+		let hashCode = 0
+		// 2.霍纳算法计算 hashCode 的值
+		for (let i = 0; i < str.length; i++) {
+			hashCode = PRIME * hashCode + str.charCodeAt(i)
+		}
+		// 3.取余操作
+		let index = hashCode % size
+		return index
+	}
+</script>
